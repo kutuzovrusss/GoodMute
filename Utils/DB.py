@@ -1,4 +1,5 @@
 import sqlite3
+import time
 
 
 class Get:
@@ -13,7 +14,7 @@ class Get:
             cursor.execute(f"SELECT * FROM mutes WHERE member={member.id}")
             result = cursor.fetchone()
         else:
-            cursor.execute(f"SELECT * FROM mutes")
+            cursor.execute(f"SELECT * FROM mutes WHERE time < {float(time.time())}")
             result = cursor.fetchall()
 
         return result
@@ -31,7 +32,7 @@ class Set:
         if not cursor.fetchone():
             cursor.execute(f"INSERT INTO mutes VALUES ({member.id}, 0)")
         else:
-            cursor.execute(f"UPDATE mutes SET time = {time} WHERE member='{member.id}'")
+            cursor.execute(f"UPDATE mutes SET time = {float(time)} WHERE member='{member.id}'")
 
         conn.commit()
         conn.close()
